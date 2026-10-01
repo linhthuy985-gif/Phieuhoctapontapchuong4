@@ -1,0 +1,538 @@
+<!doctype html>
+<html lang="vi">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>PHT Ôn tập chương 4 - Hóa học 10</title>
+<style>
+:root{
+  --bg:#f4f7ff; --ink:#17203a; --muted:#667085; --card:#fff; --line:#e6eaf2;
+  --blue:#2563eb; --indigo:#4f46e5; --violet:#7c3aed; --green:#16a34a; --red:#dc2626;
+  --amber:#d97706; --cyan:#0891b2; --pink:#db2777; --radius:20px; --shadow:0 10px 30px rgba(45,55,90,.08);
+}
+*{box-sizing:border-box}
+html{scroll-behavior:smooth}
+body{margin:0;background:linear-gradient(180deg,#eef3ff 0,#f8faff 420px,#f4f7ff 100%);font-family:Roboto,Arial,sans-serif;color:var(--ink)}
+button,input,select,textarea{font:inherit}
+.wrap{max-width:980px;margin:auto;padding:18px}
+.hero{background:linear-gradient(125deg,var(--blue),var(--indigo) 55%,var(--violet));color:#fff;border-radius:28px;padding:26px 22px;box-shadow:0 18px 45px rgba(79,70,229,.24);position:relative;overflow:hidden}
+.hero:after{content:"";position:absolute;width:180px;height:180px;border-radius:50%;background:rgba(255,255,255,.09);right:-55px;top:-55px}
+.hero h1{font-size:clamp(24px,4vw,38px);margin:5px 0 4px;letter-spacing:.2px}
+.hero .eyebrow{font-weight:800;letter-spacing:.12em;font-size:12px;opacity:.9}
+.hero .meta{opacity:.95;font-size:15px}
+.top-actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}
+.btn{border:0;border-radius:14px;padding:12px 16px;font-weight:800;cursor:pointer;transition:.2s;display:inline-flex;align-items:center;justify-content:center;gap:8px}
+.btn:hover{transform:translateY(-1px)}
+.btn-light{background:#fff;color:#3730a3}
+.btn-primary{background:linear-gradient(120deg,#2563eb,#6d28d9);color:#fff}
+.btn-ghost{background:#eef2ff;color:#4338ca}
+.btn-danger{background:#fff1f2;color:#be123c}
+.card{background:var(--card);border:1px solid rgba(230,234,242,.9);border-radius:var(--radius);padding:20px;margin:18px 0;box-shadow:var(--shadow)}
+.card h2{margin:0 0 14px;font-size:20px;display:flex;gap:10px;align-items:center}
+.grid2{display:grid;grid-template-columns:1fr 1fr;gap:14px}
+.field label{font-size:13px;font-weight:800;color:#344054;display:block;margin-bottom:6px}
+.field input,.field select,.field textarea{width:100%;border:1px solid #dbe1ee;border-radius:12px;padding:11px 12px;background:#fff;outline:none}
+.field input:focus,.field select:focus,.field textarea:focus{border-color:#818cf8;box-shadow:0 0 0 3px rgba(99,102,241,.12)}
+.note{background:#f8faff;border:1px dashed #c7d2fe;border-radius:14px;padding:12px;color:#475467}
+.goals{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px;padding:0;margin:0;list-style:none}
+.goals li{background:#f8faff;border-radius:14px;padding:12px;border-left:4px solid #6366f1}
+.section{border-top:5px solid var(--accent,#6366f1)}
+.section-tag{display:inline-flex;align-items:center;gap:6px;background:color-mix(in srgb,var(--accent,#6366f1) 10%, white);color:var(--accent,#6366f1);border-radius:999px;padding:5px 10px;font-size:12px;font-weight:900;margin-bottom:6px}
+.q{border:1px solid var(--line);border-radius:16px;padding:15px;margin:12px 0;background:#fff;transition:.2s}
+.q.good{border-color:#86efac;background:#f0fdf4}.q.bad{border-color:#fca5a5;background:#fff1f2}.q.unanswered{border-color:#fde68a;background:#fffbeb}
+.qtitle{font-weight:800;line-height:1.5;margin-bottom:10px}
+.options{display:grid;gap:8px}
+.option{display:flex;align-items:flex-start;gap:9px;border:1px solid #e5e7eb;border-radius:12px;padding:10px 12px;cursor:pointer}
+.option:hover{background:#f8fafc}.option.good{background:#dcfce7;border-color:#86efac}.option.bad{background:#fee2e2;border-color:#fca5a5}
+.feedback{margin-top:8px;font-weight:800;font-size:14px}
+.feedback.good{color:#15803d}.feedback.bad{color:#b91c1c}.feedback.warn{color:#a16207}
+.tf-row{display:flex;gap:10px;flex-wrap:wrap}
+.tf-row label{border:1px solid #dbe1ee;border-radius:12px;padding:9px 14px;cursor:pointer}
+.match-grid{display:grid;grid-template-columns:minmax(0,1fr) minmax(190px,.7fr);gap:10px;align-items:center}
+.match-left{font-weight:700}
+.drag-layout{display:grid;grid-template-columns:1fr 1fr;gap:16px}
+.drag-pool,.drop-zone-wrap{border:1px dashed #cbd5e1;border-radius:16px;padding:12px;background:#f8fafc}
+.drag-items{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:10px}
+.drag-item{border:2px solid transparent;border-radius:14px;background:#fff;overflow:hidden;cursor:grab;box-shadow:0 5px 16px rgba(15,23,42,.07);transition:.2s;user-select:none}
+.drag-item.selected{border-color:#6366f1;box-shadow:0 0 0 3px rgba(99,102,241,.12)}
+.drag-item.locked{cursor:default;opacity:.82}
+.drag-item img{width:100%;height:120px;object-fit:cover;display:block;background:#eef2ff}
+.drag-item .cap{padding:8px 10px;font-size:13px;font-weight:800;text-align:center}
+.drop-zone{min-height:82px;border:2px dashed #a5b4fc;border-radius:14px;padding:10px;margin:10px 0;background:#fff;display:flex;align-items:center;justify-content:center;text-align:center;font-weight:800;color:#4f46e5}
+.drop-zone.good{background:#dcfce7;border-color:#22c55e;color:#166534}.drop-zone.bad{background:#fee2e2;border-color:#ef4444;color:#991b1b}
+.drop-zone .drag-item{width:min(220px,100%);margin:auto}
+.video-wrap video{width:100%;border-radius:16px;background:#0f172a;max-height:430px}
+.video-placeholder{padding:25px;border:1px dashed #cbd5e1;border-radius:16px;text-align:center;color:#64748b;background:#f8fafc}
+.score-card{display:none;text-align:center;background:linear-gradient(180deg,#eef2ff,#fff);border:2px solid #c7d2fe}
+.score-big{font-size:44px;font-weight:1000;color:#4338ca;margin:8px 0}
+.summary li{margin:8px 0;line-height:1.5}
+.sticky-submit{position:sticky;bottom:12px;z-index:20;display:flex;justify-content:center;margin:22px 0}
+.sticky-submit .btn{padding:14px 22px;box-shadow:0 10px 28px rgba(67,56,202,.25)}
+.admin-backdrop{display:none;position:fixed;inset:0;background:rgba(15,23,42,.58);z-index:1000;padding:18px;overflow:auto}
+.admin-panel{max-width:950px;margin:22px auto;background:#fff;border-radius:22px;padding:18px;box-shadow:0 25px 80px rgba(15,23,42,.3)}
+.admin-head{display:flex;align-items:center;justify-content:space-between;gap:10px;position:sticky;top:0;background:#fff;padding:6px 0 12px;z-index:5;border-bottom:1px solid var(--line)}
+.admin-grid{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px}
+.admin-section{border:1px solid var(--line);border-radius:16px;padding:13px;margin-top:14px}
+.admin-row{display:grid;grid-template-columns:1fr 100px 120px;gap:8px;align-items:center;margin:8px 0}
+.admin-row input[type=number]{width:100%}
+.switch{display:flex;gap:8px;align-items:center;font-weight:800}
+.asset-row{display:grid;grid-template-columns:170px 1fr;gap:12px;align-items:center;margin:10px 0}
+.asset-row img{width:170px;height:100px;object-fit:cover;border-radius:12px;background:#eef2ff}
+.toast{position:fixed;left:50%;bottom:26px;transform:translateX(-50%) translateY(16px);background:#111827;color:#fff;padding:11px 16px;border-radius:999px;opacity:0;pointer-events:none;transition:.22s;z-index:2000;font-weight:800}
+.toast.show{opacity:1;transform:translateX(-50%) translateY(0)}
+.small{font-size:12px;color:var(--muted)}
+.hidden{display:none!important}
+@media(max-width:720px){
+ .wrap{padding:10px}.hero{padding:22px 16px;border-radius:22px}.card{padding:16px;border-radius:17px}
+ .grid2,.goals,.drag-layout,.admin-grid{grid-template-columns:1fr}
+ .match-grid{grid-template-columns:1fr}
+ .drag-items{grid-template-columns:1fr 1fr}
+ .admin-row{grid-template-columns:1fr 80px 92px}
+ .asset-row{grid-template-columns:1fr}.asset-row img{width:100%;height:150px}
+ .btn{width:100%}.top-actions .btn{width:auto}
+}
+</style>
+</head>
+<body>
+<div class="wrap">
+  <header class="hero">
+    <div class="eyebrow">PHIẾU HỌC TẬP TƯƠNG TÁC</div>
+    <h1 id="heroTitle"></h1>
+    <div class="meta"><span id="heroSubject"></span> · <span id="heroGrade"></span></div>
+    <div class="top-actions">
+      <button class="btn btn-light" id="adminBtn">⚙️ QUẢN TRỊ</button>
+      <button class="btn btn-light" id="resetBtn">🔄 LÀM LẠI</button>
+    </div>
+  </header>
+
+  <section class="card">
+    <h2>👩‍🎓 Thông tin học sinh</h2>
+    <div class="grid2">
+      <div class="field"><label>Họ và tên</label><input id="studentName" placeholder="Nhập họ và tên"></div>
+      <div class="field"><label>Lớp</label><input id="studentClass" placeholder="Ví dụ: 10A1"></div>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>🎯 Mục tiêu & hướng dẫn</h2>
+    <ul class="goals" id="goals"></ul>
+    <div class="note" style="margin-top:12px"><b>Cách làm:</b> Chọn/điền đáp án trực tiếp trên phiếu. Với kéo thả, em có thể kéo ảnh hoặc bấm chọn ảnh rồi bấm ô đáp án. Hoàn thành xong, bấm <b>Nộp bài & chấm điểm</b>.</div>
+  </section>
+
+  <main id="quizRoot"></main>
+
+  <section class="card score-card" id="scoreCard">
+    <div class="small">ĐIỂM CỦA EM</div>
+    <div class="score-big" id="scoreBig">0 / 10</div>
+    <div id="scoreBreakdown"></div>
+  </section>
+
+  <section class="card summary">
+    <h2>📌 Ghi nhớ siêu nhanh</h2>
+    <ul id="summaryList"></ul>
+  </section>
+
+  <div class="sticky-submit">
+    <button class="btn btn-primary" id="submitBtn">📤 NỘP BÀI & CHẤM ĐIỂM</button>
+  </div>
+</div>
+
+<div class="admin-backdrop" id="adminBackdrop">
+  <div class="admin-panel">
+    <div class="admin-head">
+      <h2 style="margin:0">⚙️ Quản trị phiếu học tập</h2>
+      <button class="btn btn-ghost" id="closeAdmin">Đóng</button>
+    </div>
+
+    <div class="admin-section">
+      <h3>Thông tin bài học</h3>
+      <div class="admin-grid">
+        <div class="field"><label>Tên bài</label><input id="adTitle"></div>
+        <div class="field"><label>Môn học</label><input id="adSubject"></div>
+        <div class="field"><label>Khối lớp</label><input id="adGrade"></div>
+      </div>
+      <div class="field" style="margin-top:10px"><label>Nội dung bài học / ghi chú giáo viên</label><textarea id="adContent" rows="5"></textarea></div>
+    </div>
+
+    <div class="admin-section">
+      <h3>Cấu hình dạng câu hỏi</h3>
+      <div id="adminSections"></div>
+      <div class="field" style="max-width:240px;margin-top:12px"><label>Tổng điểm toàn phiếu</label><input type="number" id="adTotal" min="0.1" step="0.1"></div>
+      <div class="small" id="pointCheck"></div>
+    </div>
+
+    <div class="admin-section">
+      <h3>Video bài học</h3>
+      <div class="field"><label>URL video trực tiếp (mp4/webm hoặc URL trình duyệt phát được)</label><input id="adVideoUrl" placeholder="https://.../video.mp4"></div>
+      <div class="field" style="margin-top:10px"><label>Hoặc chọn video từ máy</label><input type="file" id="adVideoFile" accept="video/*"></div>
+      <div class="small">Video chọn từ máy dùng được ngay trong phiên hiện tại. Nếu tệp nhỏ, hệ thống sẽ cố gắng lưu vào localStorage; tệp lớn có thể không lưu được do giới hạn trình duyệt.</div>
+    </div>
+
+    <div class="admin-section">
+      <h3>Ảnh cho phần kéo thả</h3>
+      <div id="assetAdmin"></div>
+    </div>
+
+    <div style="display:flex;gap:10px;justify-content:flex-end;flex-wrap:wrap;margin-top:14px">
+      <button class="btn btn-danger" id="clearStorage">Xóa cấu hình đã lưu</button>
+      <button class="btn btn-primary" id="saveAdmin">💾 Lưu cấu hình</button>
+    </div>
+  </div>
+</div>
+<div class="toast" id="toast"></div>
+
+<script>
+/* =====================================================
+   KHU VỰC DỮ LIỆU BÀI HỌC
+   Nội dung Hóa 10 - Ôn tập Chương 4: Phản ứng oxi hóa - khử
+   ===================================================== */
+const lessonData = {
+  subject: "Hóa học",
+  grade: "Lớp 10",
+  title: "Ôn tập chương 4 – Phản ứng oxi hóa – khử",
+  contentNote: "Ôn tập số oxi hóa, chất oxi hóa/chất khử, quá trình oxi hóa – khử và cân bằng phản ứng theo phương pháp thăng bằng electron.",
+  objectives: [
+    "Xác định được số oxi hóa của nguyên tố trong đơn chất, ion và hợp chất quen thuộc.",
+    "Phân biệt được chất oxi hóa, chất khử; quá trình oxi hóa và quá trình khử.",
+    "Nhận biết được phản ứng oxi hóa – khử dựa vào sự thay đổi số oxi hóa.",
+    "Vận dụng phương pháp thăng bằng electron để cân bằng một số phản ứng đơn giản."
+  ],
+  mcq: [
+    {id:"mc1",q:"Số oxi hóa của nguyên tố Cl trong HClO là",opts:["−1","+1","+3","+5"],ans:1,exp:"H có số oxi hóa +1, O là −2 nên Cl là +1."},
+    {id:"mc2",q:"Trong phản ứng Zn + CuSO₄ → ZnSO₄ + Cu, chất khử là",opts:["Zn","CuSO₄","ZnSO₄","Cu"],ans:0,exp:"Zn tăng số oxi hóa từ 0 lên +2 nên Zn bị oxi hóa và là chất khử."},
+    {id:"mc3",q:"Quá trình nào sau đây là quá trình khử?",opts:["Fe²⁺ → Fe³⁺ + e","Cl₂ + 2e → 2Cl⁻","Na → Na⁺ + e","2Br⁻ → Br₂ + 2e"],ans:1,exp:"Khử là quá trình nhận electron."},
+    {id:"mc4",q:"Dấu hiệu bản chất để nhận biết phản ứng oxi hóa – khử là",opts:["Có kết tủa tạo thành","Có khí thoát ra","Có sự thay đổi số oxi hóa của ít nhất một nguyên tố","Có chất điện li tham gia"],ans:2,exp:"Phản ứng oxi hóa – khử luôn có sự thay đổi số oxi hóa và sự chuyển electron."},
+    {id:"mc5",q:"Số oxi hóa của S trong H₂SO₄ là",opts:["+4","+6","−2","0"],ans:1,exp:"2(+1)+x+4(−2)=0 ⇒ x=+6."},
+    {id:"mc6",q:"Trong phản ứng 2Mg + O₂ → 2MgO, O₂ đóng vai trò",opts:["chất khử","chất oxi hóa","môi trường","chất xúc tác"],ans:1,exp:"O nhận electron, số oxi hóa từ 0 xuống −2."},
+    {id:"mc7",q:"Trong hợp chất thông thường, số oxi hóa của hydrogen thường bằng",opts:["−2","−1","+1","+2"],ans:2,exp:"Trong đa số hợp chất, H có số oxi hóa +1."},
+    {id:"mc8",q:"Tổng đại số số oxi hóa của các nguyên tử trong một phân tử trung hòa bằng",opts:["−1","0","+1","điện tích hạt nhân"],ans:1,exp:"Quy tắc tổng số oxi hóa của phân tử trung hòa bằng 0."}
+  ],
+  fill: [
+    {id:"f1",q:"Quá trình nhường electron được gọi là quá trình ________.",answers:["oxi hóa","oxy hóa"]},
+    {id:"f2",q:"Chất nhận electron được gọi là chất ________.",answers:["oxi hóa","oxy hóa"]},
+    {id:"f3",q:"Trong đơn chất, số oxi hóa của nguyên tố bằng ________.",answers:["0","không"]},
+    {id:"f4",q:"Phương pháp cân bằng phản ứng oxi hóa – khử thường dùng là phương pháp thăng bằng ________.",answers:["electron","e"]},
+    {id:"f5",q:"Quá trình nhận electron được gọi là quá trình ________.",answers:["khử"]},
+    {id:"f6",q:"Chất nhường electron được gọi là chất ________.",answers:["khử"]}
+  ],
+  tf: [
+    {id:"t1",q:"Trong mọi đơn chất, số oxi hóa của nguyên tố bằng 0.",ans:true,exp:"Đây là quy tắc cơ bản về số oxi hóa."},
+    {id:"t2",q:"Chất oxi hóa là chất nhường electron trong phản ứng.",ans:false,exp:"Chất oxi hóa là chất nhận electron; chất khử mới là chất nhường electron."},
+    {id:"t3",q:"Trong phản ứng oxi hóa – khử, quá trình oxi hóa và quá trình khử luôn xảy ra đồng thời.",ans:true,exp:"Electron do chất khử nhường phải được chất oxi hóa nhận."},
+    {id:"t4",q:"Một phản ứng có kết tủa tạo thành thì chắc chắn là phản ứng oxi hóa – khử.",ans:false,exp:"Có kết tủa không đồng nghĩa với có thay đổi số oxi hóa."},
+    {id:"t5",q:"Nguyên tố có số oxi hóa tăng sau phản ứng là nguyên tố bị oxi hóa.",ans:true,exp:"Tăng số oxi hóa tương ứng với nhường electron."},
+    {id:"t6",q:"Khi cân bằng theo phương pháp electron, tổng số electron nhường bằng tổng số electron nhận.",ans:true,exp:"Đây là nguyên tắc bảo toàn electron."}
+  ],
+  matching: [
+    {id:"m1",left:"Chất oxi hóa",right:"Nhận electron"},
+    {id:"m2",left:"Chất khử",right:"Nhường electron"},
+    {id:"m3",left:"Quá trình oxi hóa",right:"Nhường electron, số oxi hóa tăng"},
+    {id:"m4",left:"Quá trình khử",right:"Nhận electron, số oxi hóa giảm"},
+    {id:"m5",left:"Đơn chất",right:"Số oxi hóa bằng 0"},
+    {id:"m6",left:"Phân tử trung hòa",right:"Tổng đại số số oxi hóa bằng 0"},
+    {id:"m7",left:"Ion đơn nguyên tử",right:"Số oxi hóa bằng điện tích ion"},
+    {id:"m8",left:"Bảo toàn electron",right:"Tổng electron nhường bằng tổng electron nhận"}
+  ],
+  drag: [
+    {id:"d1",label:"Mg → Mg²⁺ + 2e",match:"Oxi hóa",img:""},
+    {id:"d2",label:"Cl₂ + 2e → 2Cl⁻",match:"Khử",img:""},
+    {id:"d3",label:"Zn trong Zn + CuSO₄",match:"Chất khử",img:""},
+    {id:"d4",label:"Cu²⁺ trong Zn + CuSO₄",match:"Chất oxi hóa",img:""},
+    {id:"d5",label:"Fe²⁺ → Fe³⁺ + e",match:"Oxi hóa",img:""},
+    {id:"d6",label:"O₂ trong 2Mg + O₂ → 2MgO",match:"Chất oxi hóa",img:""}
+  ],
+  dragTargets:["Oxi hóa","Khử","Chất khử","Chất oxi hóa"],
+  videoQuestions:[
+    {id:"v1",q:"Trong phản ứng oxi hóa – khử, electron được chuyển từ chất ________ sang chất oxi hóa.",answers:["khử"]},
+    {id:"v2",q:"Khi cân bằng bằng phương pháp electron, số electron nhường phải ________ số electron nhận.",answers:["bằng","bằng với"]},
+    {id:"v3",q:"Số oxi hóa tăng là dấu hiệu của quá trình ________.",answers:["oxi hóa","oxy hóa"]},
+    {id:"v4",q:"Số oxi hóa giảm là dấu hiệu của quá trình ________.",answers:["khử"]}
+  ],
+  summary:[
+    "Số oxi hóa biểu thị điện tích giả định của nguyên tử trong hợp chất.",
+    "Oxi hóa: nhường electron, số oxi hóa tăng.",
+    "Khử: nhận electron, số oxi hóa giảm.",
+    "Chất khử nhường electron; chất oxi hóa nhận electron.",
+    "Phản ứng oxi hóa – khử có sự thay đổi số oxi hóa của các nguyên tố.",
+    "Khi cân bằng theo phương pháp electron: tổng electron nhường = tổng electron nhận."
+  ]
+};
+/* =====================================================
+   HẾT KHU VỰC DỮ LIỆU BÀI HỌC
+   ===================================================== */
+
+const defaults = {
+  title: lessonData.title, subject: lessonData.subject, grade: lessonData.grade,
+  contentNote: lessonData.contentNote,
+  totalPoints: 12,
+  videoUrl: "",
+  sections:{
+    mcq:{enabled:true,count:4,points:1,label:"Trắc nghiệm"},
+    fill:{enabled:true,count:4,points:2,label:"Điền khuyết"},
+    tf:{enabled:true,count:2,points:3,label:"Đúng / Sai"},
+    matching:{enabled:true,count:6,points:3,label:"Nối cột"},
+    drag:{enabled:true,count:4,points:2,label:"Kéo thả hình ảnh"},
+    video:{enabled:true,count:2,points:1,label:"Video + điền khuyết"}
+  },
+  dragImages:{}
+};
+
+const STORE_KEY="PHT_HOA10_CH4_CONFIG_V1";
+window.addEventListener("error", function(e){
+  console.error(e.error || e.message);
+});
+
+let config=loadConfig();
+let selectedDragId=null;
+let uploadedVideoObjectUrl="";
+
+function deepClone(o){return JSON.parse(JSON.stringify(o))}
+function loadConfig(){
+  try{
+    const saved=JSON.parse(localStorage.getItem(STORE_KEY)||"null");
+    return Object.assign(deepClone(defaults),saved||{},{
+      sections:Object.assign(deepClone(defaults.sections),(saved&&saved.sections)||{}),
+      dragImages:Object.assign({},(saved&&saved.dragImages)||{})
+    });
+  }catch(e){return deepClone(defaults)}
+}
+function saveConfig(){
+  const toSave=deepClone(config);
+  if(toSave.videoUrl && toSave.videoUrl.startsWith("blob:")) toSave.videoUrl="";
+  try{localStorage.setItem(STORE_KEY,JSON.stringify(toSave));return true}catch(e){toast("Không thể lưu hết dữ liệu do giới hạn localStorage.");return false}
+}
+function esc(s){return String(s??"").replace(/[&<>"']/g,m=>({"&":"&amp;","<":"&lt;",">":"&gt;","\"":"&quot;","'":"&#39;"}[m]))}
+function norm(s){return String(s??"").trim().toLocaleLowerCase("vi-VN").replace(/\s+/g," ")}
+function toast(msg){const t=document.getElementById("toast");t.textContent=msg;t.classList.add("show");setTimeout(()=>t.classList.remove("show"),1900)}
+function colorFor(k){return ({mcq:"#2563eb",fill:"#7c3aed",tf:"#db2777",matching:"#0891b2",drag:"#d97706",video:"#16a34a"})[k]||"#6366f1"}
+function makePlaceholder(label){
+  const svg=`<svg xmlns="http://www.w3.org/2000/svg" width="700" height="420"><defs><linearGradient id="g" x1="0" x2="1"><stop stop-color="#e0e7ff"/><stop offset="1" stop-color="#ede9fe"/></linearGradient></defs><rect width="100%" height="100%" rx="36" fill="url(#g)"/><circle cx="90" cy="90" r="42" fill="#6366f1" opacity=".18"/><text x="50%" y="46%" dominant-baseline="middle" text-anchor="middle" font-family="Arial" font-size="38" font-weight="700" fill="#3730a3">${esc(label)}</text><text x="50%" y="62%" dominant-baseline="middle" text-anchor="middle" font-family="Arial" font-size="24" fill="#64748b">Hình minh họa có thể thay trong Quản trị</text></svg>`;
+  return "data:image/svg+xml;charset=UTF-8,"+encodeURIComponent(svg);
+}
+function getDragImg(item){return config.dragImages[item.id]||item.img||makePlaceholder(item.label)}
+function activeData(key,arr){
+  const sec=config.sections[key]; if(!sec.enabled)return [];
+  return arr.slice(0,Math.max(0,Math.min(sec.count,arr.length)));
+}
+function render(){
+  document.getElementById("heroTitle").textContent=config.title;
+  document.getElementById("heroSubject").textContent=config.subject;
+  document.getElementById("heroGrade").textContent=config.grade;
+  document.getElementById("goals").innerHTML=lessonData.objectives.map(x=>`<li>${esc(x)}</li>`).join("");
+  document.getElementById("summaryList").innerHTML=lessonData.summary.map(x=>`<li>${esc(x)}</li>`).join("");
+  const root=document.getElementById("quizRoot");root.innerHTML="";
+  if(config.sections.mcq.enabled) root.insertAdjacentHTML("beforeend",renderMcq());
+  if(config.sections.fill.enabled) root.insertAdjacentHTML("beforeend",renderFill());
+  if(config.sections.tf.enabled) root.insertAdjacentHTML("beforeend",renderTf());
+  if(config.sections.matching.enabled) root.insertAdjacentHTML("beforeend",renderMatching());
+  if(config.sections.drag.enabled) root.insertAdjacentHTML("beforeend",renderDrag());
+  if(config.sections.video.enabled) root.insertAdjacentHTML("beforeend",renderVideo());
+  bindDrag();
+  loadVideo();
+  document.getElementById("scoreCard").style.display="none";
+}
+function secHead(key,title,subtitle=""){
+  const s=config.sections[key];
+  return `<section class="card section" style="--accent:${colorFor(key)}"><div class="section-tag">${esc(s.label)} · ${s.points} điểm</div><h2>${title}</h2>${subtitle?`<div class="small">${subtitle}</div>`:""}`
+}
+function renderMcq(){
+  const data=activeData("mcq",lessonData.mcq);
+  return secHead("mcq","1️⃣ Trắc nghiệm nhanh")+data.map((x,i)=>`<div class="q" data-qtype="mcq" data-id="${x.id}"><div class="qtitle">Câu ${i+1}. ${esc(x.q)}</div><div class="options">${x.opts.map((o,j)=>`<label class="option"><input type="radio" name="${x.id}" value="${j}"> <b>${String.fromCharCode(65+j)}.</b> <span>${esc(o)}</span></label>`).join("")}</div><div class="feedback"></div></div>`).join("")+"</section>";
+}
+function renderFill(){
+  const data=activeData("fill",lessonData.fill);
+  return secHead("fill","2️⃣ Điền khuyết")+data.map((x,i)=>`<div class="q" data-qtype="fill" data-id="${x.id}"><div class="qtitle">Câu ${i+1}. ${esc(x.q)}</div><div class="field"><input class="fill-input" autocomplete="off" placeholder="Nhập từ/cụm từ"></div><div class="feedback"></div></div>`).join("")+"</section>";
+}
+function renderTf(){
+  const data=activeData("tf",lessonData.tf);
+  return secHead("tf","3️⃣ Đúng / Sai")+data.map((x,i)=>`<div class="q" data-qtype="tf" data-id="${x.id}"><div class="qtitle">Câu ${i+1}. ${esc(x.q)}</div><div class="tf-row"><label><input type="radio" name="${x.id}" value="true"> Đúng</label><label><input type="radio" name="${x.id}" value="false"> Sai</label></div><div class="feedback"></div></div>`).join("")+"</section>";
+}
+function renderMatching(){
+  const data=activeData("matching",lessonData.matching);
+  const rights=[...data.map(x=>x.right)].sort(()=>Math.random()-.5);
+  return secHead("matching","4️⃣ Nối cột","Chọn nội dung ở cột B tương ứng với mỗi mục ở cột A.")+
+  data.map((x,i)=>`<div class="q" data-qtype="matching" data-id="${x.id}"><div class="match-grid"><div class="match-left">${i+1}. ${esc(x.left)}</div><select class="match-select"><option value="">— Chọn đáp án —</option>${rights.map(r=>`<option value="${esc(r)}">${esc(r)}</option>`).join("")}</select></div><div class="feedback"></div></div>`).join("")+"</section>";
+}
+function renderDrag(){
+  const data=activeData("drag",lessonData.drag);
+  const targets=[...new Set(data.map(x=>x.match))];
+  return secHead("drag","5️⃣ Kéo thả hình ảnh","Kéo ảnh vào đúng ô hoặc bấm chọn ảnh → bấm ô đáp án.")+
+  `<div class="drag-layout"><div class="drag-pool"><b>Đối tượng</b><div class="drag-items" id="dragPool">${data.map(x=>`<div class="drag-item" draggable="true" data-drag-id="${x.id}" data-match="${esc(x.match)}"><img src="${getDragImg(x)}" alt="${esc(x.label)}"><div class="cap">${esc(x.label)}</div></div>`).join("")}</div></div><div class="drop-zone-wrap"><b>Ô đáp án</b>${targets.map(t=>`<div class="drop-zone" data-target="${esc(t)}">${esc(t)}</div>`).join("")}</div></div><div id="dragFeedback" class="feedback"></div></section>`;
+}
+function renderVideo(){
+  const data=activeData("video",lessonData.videoQuestions);
+  return secHead("video","6️⃣ Xem video + điền khuyết","Giáo viên có thể nhập URL hoặc chọn video trong Quản trị.")+
+  `<div class="video-wrap" id="videoHost"></div>`+
+  data.map((x,i)=>`<div class="q" data-qtype="video" data-id="${x.id}"><div class="qtitle">Câu ${i+1}. ${esc(x.q)}</div><div class="field"><input class="video-input" autocomplete="off" placeholder="Nhập đáp án"></div><div class="feedback"></div></div>`).join("")+"</section>";
+}
+function loadVideo(){
+  const host=document.getElementById("videoHost"); if(!host)return;
+  if(config.videoUrl){
+    host.innerHTML=`<video controls preload="metadata" src="${esc(config.videoUrl)}"></video>`;
+  }else{
+    host.innerHTML=`<div class="video-placeholder">🎬 Chưa có video. Giáo viên vào <b>⚙️ Quản trị</b> để thêm URL hoặc chọn video từ máy.</div>`;
+  }
+}
+function bindDrag(){
+  document.querySelectorAll(".drag-item").forEach(el=>{
+    el.addEventListener("dragstart",e=>{if(el.classList.contains("locked")){e.preventDefault();return}e.dataTransfer.setData("text/plain",el.dataset.dragId)});
+    el.addEventListener("click",()=>{if(el.classList.contains("locked"))return;document.querySelectorAll(".drag-item.selected").forEach(x=>x.classList.remove("selected"));selectedDragId=el.dataset.dragId;el.classList.add("selected");toast("Đã chọn ảnh. Bây giờ bấm ô đáp án.")});
+  });
+  document.querySelectorAll(".drop-zone").forEach(zone=>{
+    zone.addEventListener("dragover",e=>e.preventDefault());
+    zone.addEventListener("drop",e=>{e.preventDefault();attemptDrop(e.dataTransfer.getData("text/plain"),zone)});
+    zone.addEventListener("click",()=>{if(selectedDragId)attemptDrop(selectedDragId,zone)});
+  });
+}
+function attemptDrop(id,zone){
+  const item=document.querySelector(`.drag-item[data-drag-id="${String(id).replace(/"/g, "\\\"")}"]`); if(!item||item.classList.contains("locked"))return;
+  const ok=item.dataset.match===zone.dataset.target;
+  if(ok){
+    zone.classList.remove("bad");zone.classList.add("good");
+    zone.innerHTML="";zone.appendChild(item);item.classList.add("locked");item.classList.remove("selected");item.draggable=false;
+    item.dataset.placed="true";selectedDragId=null;toast("Chính xác! 🎉");
+  }else{
+    zone.classList.add("bad");setTimeout(()=>zone.classList.remove("bad"),650);
+    item.classList.remove("selected");selectedDragId=null;toast("Chưa đúng, thử lại nhé!");
+  }
+}
+function findById(arr,id){return arr.find(x=>x.id===id)}
+function setQState(el,state,msg){
+  el.classList.remove("good","bad","unanswered");if(state)el.classList.add(state);
+  const f=el.querySelector(".feedback");if(f){f.className="feedback "+(state==="good"?"good":state==="bad"?"bad":"warn");f.textContent=msg||""}
+}
+function gradeSection(key){
+  let correct=0,total=0;
+  if(key==="mcq"){
+    const data=activeData("mcq",lessonData.mcq); total=data.length;
+    data.forEach(x=>{
+      const box=document.querySelector(`[data-qtype="mcq"][data-id="${x.id}"]`);const checked=box?.querySelector(`input[name="${x.id}"]:checked`);
+      box?.querySelectorAll(".option").forEach(o=>o.classList.remove("good","bad"));
+      if(!checked){setQState(box,"unanswered","Chưa trả lời.");return}
+      const val=+checked.value;if(val===x.ans){correct++;setQState(box,"good","✓ Chính xác");checked.closest(".option").classList.add("good")}
+      else{setQState(box,"bad",`✗ Đáp án đúng: ${String.fromCharCode(65+x.ans)}. ${x.opts[x.ans]}`);checked.closest(".option").classList.add("bad");box.querySelector(`input[value="${x.ans}"]`)?.closest(".option").classList.add("good")}
+    });
+  }
+  if(key==="fill"){
+    const data=activeData("fill",lessonData.fill);total=data.length;
+    data.forEach(x=>{const box=document.querySelector(`[data-qtype="fill"][data-id="${x.id}"]`);const inp=box?.querySelector(".fill-input");const v=norm(inp?.value);
+      if(!v){setQState(box,"unanswered","Chưa trả lời.");return}
+      if(x.answers.some(a=>norm(a)===v)){correct++;setQState(box,"good","✓ Chính xác");inp.style.borderColor="#22c55e"}else{setQState(box,"bad",`✗ Đáp án đúng: ${x.answers[0]}`);inp.style.borderColor="#ef4444"}
+    });
+  }
+  if(key==="tf"){
+    const data=activeData("tf",lessonData.tf);total=data.length;
+    data.forEach(x=>{const box=document.querySelector(`[data-qtype="tf"][data-id="${x.id}"]`);const checked=box?.querySelector(`input[name="${x.id}"]:checked`);
+      if(!checked){setQState(box,"unanswered","Chưa trả lời.");return}
+      const v=checked.value==="true";if(v===x.ans){correct++;setQState(box,"good","✓ Chính xác")}else{setQState(box,"bad",`✗ Đáp án đúng: ${x.ans?"Đúng":"Sai"}. ${x.exp}`)}
+    });
+  }
+  if(key==="matching"){
+    const data=activeData("matching",lessonData.matching);total=data.length;
+    data.forEach(x=>{const box=document.querySelector(`[data-qtype="matching"][data-id="${x.id}"]`);const sel=box?.querySelector(".match-select");const v=sel?.value||"";
+      if(!v){setQState(box,"unanswered","Chưa trả lời.");return}
+      if(v===x.right){correct++;setQState(box,"good","✓ Chính xác")}else{setQState(box,"bad",`✗ Đáp án đúng: ${x.right}`)}
+    });
+  }
+  if(key==="drag"){
+    const data=activeData("drag",lessonData.drag);total=data.length;
+    data.forEach(x=>{const item=document.querySelector(`.drag-item[data-drag-id="${x.id}"]`);if(item?.dataset.placed==="true")correct++});
+    document.querySelectorAll(".drop-zone").forEach(z=>{if(z.querySelector(".drag-item"))z.classList.add("good")});
+    document.getElementById("dragFeedback").textContent=`✓ Đúng ${correct}/${total} đối tượng.`;
+  }
+  if(key==="video"){
+    const data=activeData("video",lessonData.videoQuestions);total=data.length;
+    data.forEach(x=>{const box=document.querySelector(`[data-qtype="video"][data-id="${x.id}"]`);const inp=box?.querySelector(".video-input");const v=norm(inp?.value);
+      if(!v){setQState(box,"unanswered","Chưa trả lời.");return}
+      if(x.answers.some(a=>norm(a)===v)){correct++;setQState(box,"good","✓ Chính xác");inp.style.borderColor="#22c55e"}else{setQState(box,"bad",`✗ Đáp án đúng: ${x.answers[0]}`);inp.style.borderColor="#ef4444"}
+    });
+  }
+  const max=config.sections[key].points||0;
+  return {key,correct,total,score:total?correct/total*max:0,max};
+}
+function submit(){
+  const keys=["mcq","fill","tf","matching","drag","video"].filter(k=>config.sections[k].enabled);
+  const results=keys.map(gradeSection);const score=results.reduce((s,r)=>s+r.score,0);
+  const fmt=n=>(Math.round((n+Number.EPSILON)*100)/100).toString().replace(".",",");
+  document.getElementById("scoreBig").textContent=`${fmt(score)} / ${fmt(config.totalPoints)}`;
+  document.getElementById("scoreBreakdown").innerHTML=results.map(r=>`<div class="small">${esc(config.sections[r.key].label)}: ${r.correct}/${r.total} đúng → <b>${fmt(r.score)}/${fmt(r.max)}</b></div>`).join("");
+  document.getElementById("scoreCard").style.display="block";
+  document.getElementById("scoreCard").scrollIntoView({behavior:"smooth",block:"center"});
+}
+function resetQuiz(){
+  const name=document.getElementById("studentName").value, cls=document.getElementById("studentClass").value;
+  render();document.getElementById("studentName").value=name;document.getElementById("studentClass").value=cls;toast("Đã làm mới bài.");
+}
+function openAdmin(){
+  const pwd=prompt("Nhập mật khẩu Quản trị:");
+  if(pwd!=="1230"){if(pwd!==null)alert("Mật khẩu không đúng.");return}
+  fillAdmin();document.getElementById("adminBackdrop").style.display="block";
+}
+function fillAdmin(){
+  document.getElementById("adTitle").value=config.title;
+  document.getElementById("adSubject").value=config.subject;
+  document.getElementById("adGrade").value=config.grade;
+  document.getElementById("adContent").value=config.contentNote||"";
+  document.getElementById("adTotal").value=config.totalPoints;
+  document.getElementById("adVideoUrl").value=(config.videoUrl||"").startsWith("blob:")?"":(config.videoUrl||"");
+  const maxes={mcq:lessonData.mcq.length,fill:lessonData.fill.length,tf:lessonData.tf.length,matching:lessonData.matching.length,drag:lessonData.drag.length,video:lessonData.videoQuestions.length};
+  document.getElementById("adminSections").innerHTML=Object.entries(config.sections).map(([k,s])=>`<div class="admin-row"><label class="switch"><input type="checkbox" data-ad-enabled="${k}" ${s.enabled?"checked":""}> ${esc(s.label)}</label><input type="number" min="0" max="${maxes[k]}" step="1" data-ad-count="${k}" value="${s.count}" title="Số câu"><input type="number" min="0" step="0.1" data-ad-points="${k}" value="${s.points}" title="Điểm tối đa"></div>`).join("")+`<div class="small">Thứ tự cột: bật/tắt · số câu · điểm tối đa. Số câu tối đa theo ngân hàng hiện có.</div>`;
+  document.getElementById("assetAdmin").innerHTML=lessonData.drag.map(x=>`<div class="asset-row"><img src="${getDragImg(x)}" id="preview_${x.id}"><div><b>${esc(x.label)}</b><div class="small">Đáp án: ${esc(x.match)}</div><input type="file" accept="image/*" data-image-id="${x.id}"></div></div>`).join("");
+  document.querySelectorAll("[data-image-id]").forEach(inp=>inp.addEventListener("change",handleImageUpload));
+  document.querySelectorAll("[data-ad-enabled],[data-ad-count],[data-ad-points],#adTotal").forEach(el=>el.addEventListener("input",updatePointCheck));
+  updatePointCheck();
+}
+function updatePointCheck(){
+  let sum=0;document.querySelectorAll("[data-ad-enabled]").forEach(ch=>{const k=ch.dataset.adEnabled;if(ch.checked)sum+=+(document.querySelector(`[data-ad-points="${k}"]`).value||0)});
+  const total=+(document.getElementById("adTotal").value||0);
+  const pointCheckEl=document.getElementById("pointCheck");
+  pointCheckEl.textContent=`Tổng điểm các phần đang bật: ${sum} / Tổng điểm toàn phiếu: ${total}`;
+  pointCheckEl.style.color=Math.abs(sum-total)<1e-9?"#15803d":"#b91c1c";
+}
+function handleImageUpload(e){
+  const file=e.target.files?.[0];if(!file)return;const id=e.target.dataset.imageId;const fr=new FileReader();
+  fr.onload=()=>{config.dragImages[id]=fr.result;document.getElementById("preview_"+id).src=fr.result};fr.readAsDataURL(file);
+}
+function handleVideoFile(e){
+  const file=e.target.files?.[0];if(!file)return;
+  if(uploadedVideoObjectUrl)URL.revokeObjectURL(uploadedVideoObjectUrl);
+  uploadedVideoObjectUrl=URL.createObjectURL(file);
+  config.videoUrl=uploadedVideoObjectUrl;
+  document.getElementById("adVideoUrl").value="";
+  if(file.size<=1800000){
+    const fr=new FileReader();fr.onload=()=>{try{const tmp=deepClone(config);tmp.videoUrl=fr.result;localStorage.setItem(STORE_KEY,JSON.stringify(tmp));toast("Video nhỏ đã được lưu trong trình duyệt.")}catch(err){toast("Video dùng được trong phiên này nhưng không lưu được lâu dài.")}};fr.readAsDataURL(file);
+  }else toast("Video đã nạp cho phiên hiện tại; tệp lớn không lưu vào localStorage.");
+}
+function saveAdminConfig(){
+  const next=deepClone(config);
+  next.title=document.getElementById("adTitle").value.trim()||lessonData.title;
+  next.subject=document.getElementById("adSubject").value.trim()||lessonData.subject;
+  next.grade=document.getElementById("adGrade").value.trim()||lessonData.grade;
+  next.contentNote=document.getElementById("adContent").value.trim();
+  next.totalPoints=+(document.getElementById("adTotal").value||0);
+  Object.keys(next.sections).forEach(k=>{
+    next.sections[k].enabled=document.querySelector(`[data-ad-enabled="${k}"]`).checked;
+    next.sections[k].count=+document.querySelector(`[data-ad-count="${k}"]`).value||0;
+    next.sections[k].points=+document.querySelector(`[data-ad-points="${k}"]`).value||0;
+  });
+  const sum=Object.values(next.sections).filter(s=>s.enabled).reduce((a,s)=>a+s.points,0);
+  if(Math.abs(sum-next.totalPoints)>1e-9){alert(`Chưa thể lưu: tổng điểm các phần đang bật là ${sum}, nhưng tổng điểm toàn phiếu là ${next.totalPoints}. Hãy chỉnh cho bằng nhau.`);return}
+  const url=document.getElementById("adVideoUrl").value.trim();
+  if(url)next.videoUrl=url;else if(config.videoUrl)next.videoUrl=config.videoUrl;
+  config=next;saveConfig();document.getElementById("adminBackdrop").style.display="none";render();toast("Đã lưu cấu hình.");
+}
+document.getElementById("submitBtn").addEventListener("click",submit);
+document.getElementById("resetBtn").addEventListener("click",resetQuiz);
+document.getElementById("adminBtn").addEventListener("click",openAdmin);
+document.getElementById("closeAdmin").addEventListener("click",()=>document.getElementById("adminBackdrop").style.display="none");
+document.getElementById("saveAdmin").addEventListener("click",saveAdminConfig);
+document.getElementById("clearStorage").addEventListener("click",()=>{if(confirm("Xóa cấu hình đã lưu và trở về mặc định?")){localStorage.removeItem(STORE_KEY);config=deepClone(defaults);fillAdmin();render();toast("Đã khôi phục mặc định.")}});
+document.getElementById("adVideoFile").addEventListener("change",handleVideoFile);
+document.getElementById("adminBackdrop").addEventListener("click",e=>{
+  const backdrop=document.getElementById("adminBackdrop");
+  if(e.target===backdrop)backdrop.style.display="none";
+});
+render();
+</script>
+</body>
+</html>
